@@ -133,9 +133,14 @@ task.precompile = function(task)
         table.insert(srcfiles,path)
     end)
 
-    local exec = sys.exec(filepath.join(gsrpcpath,"bin/gsrpc" .. sys.EXE_NAME))
+    local path      = filepath.join(gsrpcpath,"bin/gsrpc" .. sys.EXE_NAME)
+    local outputdir = filepath.join(task.Owner.Path,gsrpc.outputdir)
 
-    exec:run("-lang",gsrpc.lang,"-o",gsrpc.outputdir,table.unpack(srcfiles))
+    local exec = sys.exec(path)
+
+    if 0 ~= exec:run("-lang",gsrpc.lang,"-o",outputdir,table.unpack(srcfiles)) then
+      return true
+    end
 end
 task.precompile.Desc = "compile the gsrpc files"
 task.precompile.Prev = "resources"
